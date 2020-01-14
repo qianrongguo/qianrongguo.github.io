@@ -1,14 +1,52 @@
-<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><link rel="stylesheet" type="text/css" href="//fonts.loli.net/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.4"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.4"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><title>react_router/指南/Redux整合 | Title</title><meta name="generator" content="Hexo 4.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">react_router/指南/Redux整合</h1><a id="logo" href="/.">Title</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="search"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">react_router/指南/Redux整合</h1><div class="post-meta"><a href="/2020/01/09/react_router/%E6%8C%87%E5%8D%97/Redux%E6%95%B4%E5%90%88/#comments" class="comment-count"></a><p><span class="date">Jan 09, 2020</span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>Hits</i></i></span></p></div><div class="post-content"><h2 id="Redux整合"><a href="#Redux整合" class="headerlink" title="Redux整合"></a>Redux整合</h2><p>Redux是React生态系统的重要组成部分。对于想要同时使用React Router和Redux的人，我们希望使其无缝集成。</p>
-<h3 id="阻止的更新"><a href="#阻止的更新" class="headerlink" title="阻止的更新"></a>阻止的更新</h3><p>通常，React Router和Redux可以很好地协同工作。不过，有时候，应用程序的组件可能会在位置更改时（子路线或活动的导航链接不更新）不更新。</p>
-<p>在以下情况下会发生这种情况：<br>    1.该组件通过connect（）（Comp）连接到redux。<br>    2.该组件不是“路由组件”，这意味着它的呈现方式不是这样：<code>&lt;Route component = {SomeConnectedThing} /&gt;</code></p>
-<p>问题在于Redux实现了shouldComponentUpdate，如果没有从路由器接收道具，则没有任何迹象表明发生了任何变化。这很容易解决。查找连接组件的位置，然后将其与Router包装在一起。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// before</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(mapStateToProps)(Something)</span><br><span class="line"></span><br><span class="line"><span class="comment">// after</span></span><br><span class="line"><span class="keyword">import</span> &#123; withRouter &#125; <span class="keyword">from</span> <span class="string">'react-router-dom'</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> withRouter(connect(mapStateToProps)(Something))</span><br></pre></td></tr></table></figure>
+extends base
 
-<h3 id="深度整合"><a href="#深度整合" class="headerlink" title="深度整合"></a>深度整合</h3><p>有些人想：<br>    1.与商店同步并从商店访问路由数据。<br>    2.能够通过调度动作进行导航。<br>    3.在Redux devtools中支持对路径更改进行时间旅行调试。</p>
-<p>所有这些都需要更深入的集成。</p>
-<p>我们的建议是不要将路线完全保留在Redux商店中。推理:</p>
-<p>   1.路由数据已经成为大多数关心它的组件的支持。无论是来自商店还是路由器，您组件的代码都基本相同。</p>
-<p>   2.在大多数情况下，您可以使用链接，导航链接和重定向来执行导航操作。有时，在某些最初由操作启动的异步任务之后，您可能还需要以编程方式导航。例如，您可以在用户提交登录表单时调度操作。然后，您的重击，传奇或其他异步处理程序会对凭据进行身份验证，如果成功，则需要以某种方式导航到新页面。此处的解决方案只是将历史对象（提供给所有路由组件）包括在操作的有效负载中，并且异步处理程序可以在适当的时候使用此对象进行导航。</p>
-<p>   3.路线更改对于时间旅行调试不太重要。唯一明显的情况是调试路由器/商店同步中的问题，如果根本不同步它们，则该问题将消失。</p>
-<p>但是，如果您强烈希望与商店同步路由，则可以尝试使用Connected React Router，这是React Router v4和Redux的第三方绑定。</p>
-</div><div class="post-copyright"><blockquote><p>Original author: just coding</p><p>Original link: <a href="http://yoursite.com/2020/01/09/react_router/指南/Redux整合/">http://yoursite.com/2020/01/09/react_router/指南/Redux整合/</a></p><p>Copyright Notice: Please indicate the source of the reprint (must retain the author's signature and link)</p></blockquote></div><div class="tags"></div><div class="post-share"><div class="social-share"><span>Share:</span></div></div><div class="post-nav"><a href="/2020/01/09/react_router/%E6%8C%87%E5%8D%97/Static_Routes/" class="pre">react_router/指南/Static_Routes</a><a href="/2020/01/09/react_router/%E6%8C%87%E5%8D%97/Testing/" class="next">react_router/指南/Testing</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">Contents</i></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redux整合"><span class="toc-text">Redux整合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#阻止的更新"><span class="toc-text">阻止的更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#深度整合"><span class="toc-text">深度整合</span></a></li></ol></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/10/react_router/Api/location/">react_router/Api/location</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/10/react_router/Api/history/">react_router/Api/history</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/10/react_router/Api/Switch/">react_router/Api/Switch</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/10/react_router/Api/Router/">react_router/Api/Router</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/10/react_router/Api/Route/">react_router/Api/Route</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/10/react_router/examples/custom_link/">react_router/examples/custom_link</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/10/react_router/examples/redirect/">react_router/examples/redirect</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/09/react_router/examples/%E5%B5%8C%E5%A5%97/">react_router/examples/嵌套</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/09/react_router/examples/url_parameters/">react_router/examples/url_parameters</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/09/react_router/examples/Basic/">react_router/examples/Basic</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> Tags</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> Archive</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">19</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> Blogroll</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">Site Map</a> |  <a href="/atom.xml">Subscribe to this site</a> |  <a href="/about/">Contact the blogger</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次，本站总访客数:<i id="busuanzi_container_site_uv"><i id="busuanzi_value_site_uv"></i></i>人</p><p><span> Copyright &copy;<a href="/." rel="nofollow">just coding.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/" target="_blank" rel="noopener"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.4"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.4" async></script><link rel="stylesheet" type="text/css" href="/share/css/share.css"><script type="text/javascript" src="/share/js/social-share.js" charset="utf-8"></script><script type="text/javascript" src="/share/js/qrcode.js" charset="utf-8"></script></body></html>
+block title
+  title= page.title + ' | ' + config.title
+
+block content
+  .post
+    h1.post-title= page.title
+    .post-meta
+      if theme.comment
+        include _partial/comment_count
+        +comment-count(page.path)
+      p
+        span.date= page.date.format(theme.date_formats.post)
+        if page.categories.length > 0
+          span
+            for category in page.categories.toArray()
+              a.category(href=url_for(category.path))= category.name 
+        if theme.busuanzi == true
+          span
+            i#busuanzi_container_page_pv
+              i#busuanzi_value_page_pv
+              i= '' + __('hits')
+    .post-content
+      != page.content
+    if theme.copyright.enable
+      .post-copyright
+        blockquote
+          p=  __("copyright_author") + ": " + config.author
+          p= __("copyright_link") + ": " 
+            a(href=url_for(config.url +'/'+ page.path))= config.url +'/'+ page.path
+          p!= __("copyright_notice") + ": " + (theme.copyright.describe ? theme.copyright.describe : __("copyright_details"))
+    include _partial/tag
+    .post-share
+      include _partial/share
+    include _partial/post_nav
+    #comments
+      include _partial/comments
+
+block tocmodel
+  if theme.toc.enable == true 
+    .widget(id='toc')
+      .widget-title
+        i(class='fa fa-fei')= __('contents')
+      != toc(page.content, {list_number: theme.toc.number})
+
+block pageOnly
+  if theme.toc.enable == true 
+    script(type='text/javascript', src=url_for(theme.js) + '/toctotop.js' + '?v=' + theme.version, async)
+  else 
+    script(type='text/javascript', src=url_for(theme.js) + '/totop.js' + '?v=' + theme.version, async)
+  include _partial/comments_js
