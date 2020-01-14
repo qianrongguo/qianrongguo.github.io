@@ -1,52 +1,17 @@
-extends base
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><link rel="stylesheet" type="text/css" href="//fonts.loli.net/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.4"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.4"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><title>react_router/Api/HashRouter | Title</title><meta name="generator" content="Hexo 4.2.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">react_router/Api/HashRouter</h1><a id="logo" href="/.">Title</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> Home</i></a><a href="/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/about/"><i class="fa fa-user"> About</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="search"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">react_router/Api/HashRouter</h1><div class="post-meta"><a href="/2020/01/13/react_router/Api/HashRouter/#comments" class="comment-count"></a><p><span class="date">Jan 13, 2020</span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>Hits</i></i></span></p></div><div class="post-content"><p><code>&lt;Router&gt;</code>使用URL的哈希部分（即window.location.hash）使UI与URL保持同步。</p>
+<p><strong>重要说明</strong>：哈希历史记录不支持location.key或location.state。在以前的版本中，我们尝试对行为进行匀称处理，但存在一些无法解决的极端情况。任何需要此行为的代码或插件都将无法使用。由于此技术仅旨在支持旧版浏览器，因此建议您将服务器配置为与<code>&lt;BrowserHistory&gt;</code>一起使用。</p>
+<figure class="highlight jsx"><figcaption><span>harmony</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;HashRouter</span><br><span class="line">  basename=&#123;optionalString&#125;</span><br><span class="line">  getUserConfirmation=&#123;optionalFunc&#125;</span><br><span class="line">  hashType=&#123;optionalString&#125;</span><br><span class="line">&gt;</span><br><span class="line">  &lt;App /&gt;</span><br><span class="line">&lt;<span class="regexp">/HashRouter&gt;</span></span><br></pre></td></tr></table></figure>
 
-block title
-  title= page.title + ' | ' + config.title
+<h3 id="basename-string"><a href="#basename-string" class="headerlink" title="basename: string"></a>basename: string</h3><p>所有位置的基本URL。格式正确的基本名称应以斜杠开头，但不能以斜杠结尾。</p>
+<figure class="highlight jsx"><figcaption><span>harmony</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;HashRouter basename=<span class="string">"/calendar"</span>/&gt;</span><br><span class="line">&lt;Link to=<span class="string">"/today"</span>/&gt; <span class="comment">// renders &lt;a href="#/calendar/today"&gt;</span></span><br></pre></td></tr></table></figure>
 
-block content
-  .post
-    h1.post-title= page.title
-    .post-meta
-      if theme.comment
-        include _partial/comment_count
-        +comment-count(page.path)
-      p
-        span.date= page.date.format(theme.date_formats.post)
-        if page.categories.length > 0
-          span
-            for category in page.categories.toArray()
-              a.category(href=url_for(category.path))= category.name 
-        if theme.busuanzi == true
-          span
-            i#busuanzi_container_page_pv
-              i#busuanzi_value_page_pv
-              i= '' + __('hits')
-    .post-content
-      != page.content
-    if theme.copyright.enable
-      .post-copyright
-        blockquote
-          p=  __("copyright_author") + ": " + config.author
-          p= __("copyright_link") + ": " 
-            a(href=url_for(config.url +'/'+ page.path))= config.url +'/'+ page.path
-          p!= __("copyright_notice") + ": " + (theme.copyright.describe ? theme.copyright.describe : __("copyright_details"))
-    include _partial/tag
-    .post-share
-      include _partial/share
-    include _partial/post_nav
-    #comments
-      include _partial/comments
+<h3 id="getUserConfirmation-func"><a href="#getUserConfirmation-func" class="headerlink" title="getUserConfirmation: func"></a>getUserConfirmation: func</h3><p>用于确认导航的功能。默认使用window.confirm。</p>
+<figure class="highlight jsx"><figcaption><span>harmony</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;HashRouter</span><br><span class="line">  getUserConfirmation=&#123;(message, callback) =&gt; &#123;</span><br><span class="line">    <span class="comment">// this is the default behavior</span></span><br><span class="line">    <span class="keyword">const</span> allowTransition = <span class="built_in">window</span>.confirm(message);</span><br><span class="line">    callback(allowTransition);</span><br><span class="line">  &#125;&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
 
-block tocmodel
-  if theme.toc.enable == true 
-    .widget(id='toc')
-      .widget-title
-        i(class='fa fa-fei')= __('contents')
-      != toc(page.content, {list_number: theme.toc.number})
-
-block pageOnly
-  if theme.toc.enable == true 
-    script(type='text/javascript', src=url_for(theme.js) + '/toctotop.js' + '?v=' + theme.version, async)
-  else 
-    script(type='text/javascript', src=url_for(theme.js) + '/totop.js' + '?v=' + theme.version, async)
-  include _partial/comments_js
+<h3 id="hashType-string"><a href="#hashType-string" class="headerlink" title="hashType: string"></a>hashType: string</h3><p>用于window.location.hash的编码类型。可用值为：</p>
+<ul>
+<li>“slash”：创建＃/ 和 ＃/sunshine/lollipops之类的哈希</li>
+<li>“slash”：创建hash # and #sunshine/lollipops</li>
+<li>“hashbang”：创建“可抓取的ajax”（Google弃用）哈希l#!/ and #!/sunshine/lollipops<br>默认为“斜线”。</li>
+</ul>
+</div><div class="post-copyright"><blockquote><p>Original author: just coding</p><p>Original link: <a href="http://yoursite.com/2020/01/13/react_router/Api/HashRouter/">http://yoursite.com/2020/01/13/react_router/Api/HashRouter/</a></p><p>Copyright Notice: Please indicate the source of the reprint (must retain the author's signature and link)</p></blockquote></div><div class="tags"></div><div class="post-share"><div class="social-share"><span>Share:</span></div></div><div class="post-nav"><a href="/2020/01/13/react_router/Api/BrowserRouter/" class="pre">react_router/Api/BrowserRouter</a><a href="/2020/01/13/react_router/Api/Prompt/" class="next">react_router/Api/Prompt</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">Contents</i></div><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#basename-string"><span class="toc-text">basename: string</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getUserConfirmation-func"><span class="toc-text">getUserConfirmation: func</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hashType-string"><span class="toc-text">hashType: string</span></a></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/14/%E9%9D%A2%E8%AF%95%E9%A2%98/react_%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题/react_面试题</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/13/react_router/examples/Preventing_Transition/">react_router/examples/Preventing_Transition</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/13/react_router/examples/No_Match/">react_router/examples/No_Match</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/13/react_router/examples/Recursive_Paths/">react_router/examples/Recursive_Paths</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/13/react_router/examples/Siderbar/">react_router/examples/Siderbar</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/13/react_router/examples/Animated_Transitions/">react_router/examples/Animated_Transitions</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/13/react_router/examples/Route_Config/">react_router/examples/Route_Config</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/13/react_router/examples/Modal_Gallery/">react_router/examples/Modal_Gallery</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/13/react_router/examples/StaticRouter_Context/">react_router/examples/StaticRouter_Context</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/13/react_router/examples/Query_Paramenters/">react_router/examples/Query_Paramenters</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> Tags</i></div><div class="tagcloud"></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> Archive</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/">2020</a><span class="archive-list-count">40</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> Blogroll</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">Site Map</a> |  <a href="/atom.xml">Subscribe to this site</a> |  <a href="/about/">Contact the blogger</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次，本站总访客数:<i id="busuanzi_container_site_uv"><i id="busuanzi_value_site_uv"></i></i>人</p><p><span> Copyright &copy;<a href="/." rel="nofollow">just coding.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="http://busuanzi.ibruce.info/" target="_blank" rel="noopener"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script type="text/javascript" src="/js/search.json.js?v=2.0.4"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.4" async></script><link rel="stylesheet" type="text/css" href="/share/css/share.css"><script type="text/javascript" src="/share/js/social-share.js" charset="utf-8"></script><script type="text/javascript" src="/share/js/qrcode.js" charset="utf-8"></script></body></html>
