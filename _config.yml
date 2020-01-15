@@ -11,6 +11,7 @@ author: just coding
 language: en
 timezone: ''
 
+
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://yoursite.com
@@ -99,10 +100,14 @@ stylus:
   compress: true
 
 
+toc:
+  maxdepth: 3
+  slugify: false
+
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:lin19999/lin19999.github.io.git
+  repo: git@github.com:qianrongguo/qianrongguo.github.io.git
   branch: master
