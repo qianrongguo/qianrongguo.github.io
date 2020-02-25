@@ -28,7 +28,9 @@ export default function QueryParamsExample() {
 // 基于useLocation进行解析的自定义钩子
    //您的查询字符串。
 function useQuery() {
-  return new URLSearchParams(useLocation().search);
+  return new URLSearchParam
+
+s(useLocation().search);
 }
 
 function QueryParamsDemo() {
