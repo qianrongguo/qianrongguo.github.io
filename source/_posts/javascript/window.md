@@ -47,3 +47,12 @@ history对象保存了浏览器的历史记录，JavaScript可以调用history�
 这个对象属于历史遗留对象，对于现代Web页面来说，由于大量使用AJAX和页面交互，简单粗暴地调用history.back()可能会让用户感到非常愤怒。
 新手开始设计Web页面时喜欢在登录页登录成功时调用history.back()，试图回到登录前的页面。这是一种错误的方法。
 任何情况，你都不应该使用history这个对象了。
+
+#### cookie
+创建cookie:`document.cookie="username=John Doe";`
+读取cookie:document.cookie 将以字符串的方式返回所有的 cookie。
+修改cookie:修改 cookie 类似于创建 cookie，如下所示：`document.cookie="username=John Smith; expires=Thu, 18 Dec 2043 12:00:00 GMT; path=/";`
+删除 Cookie: 删除 cookie 非常简单。您只需要设置 expires 参数为以前的时间即可，如下所示，设置为 Thu, 01 Jan 1970 00:00:00 GMT:
+`document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 GMT";`注意，当您删除时不必指定 cookie 的值
+
+
